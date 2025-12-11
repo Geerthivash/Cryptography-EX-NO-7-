@@ -19,27 +19,47 @@ To use the Data Encryption Standard (DES) algorithm for a practical application,
 #include <stdio.h>
 #include <string.h>
 
-void main(){
-    char P[] = "HI";  // 2-byte Plaintext Block
-    int K = 0xAA;     // Initial Key
-    int K1 = K ^ 0x01; // Subkey 1
-    int K2 = K ^ 0x02; // Subkey 2
-    char E[3], D[3];
+int main() {
+    char P[100], E[100], D[100];
+    int K = 0xAA;          // Base key
+    int K1 = K ^ 0x01;     // Subkey 1
+    int K2 = K ^ 0x02;     // Subkey 2
 
-    // Encryption (Simulated 2 Rounds)
-    E[0] = P[0] ^ K1;
-    E[1] = P[1] ^ K2;
-    E[2] = '\0'; // Null terminator
+    printf("Enter Plaintext: ");
+    scanf("%[^\n]", P);
 
-    // Decryption (Simulated 2 Rounds)
-    D[0] = E[0] ^ K1;
-    D[1] = E[1] ^ K2;
-    D[2] = '\0';
+    int len = strlen(P);
+
+    // --- Encryption ---
+    for(int i=0; i<len; i++) {
+        if(i % 2 == 0)    // even index
+            E[i] = P[i] ^ K1;
+        else              // odd index
+            E[i] = P[i] ^ K2;
+    }
+    E[len] = '\0';
+
+    // --- Decryption ---
+    for(int i=0; i<len; i++) {
+        if(i % 2 == 0)
+            D[i] = E[i] ^ K1;
+        else
+            D[i] = E[i] ^ K2;
+    }
+    D[len] = '\0';
 
     printf("Plain:     %s\n", P);
-    printf("Encrypted: %d %d\n", E[0], E[1]);
+
+    printf("Encrypted (decimal bytes): ");
+    for(int i=0; i<len; i++)
+        printf("%d ", (unsigned char)E[i]);
+    printf("\n");
+
     printf("Decrypted: %s\n", D);
+
+    return 0;
 }
+
 ```
 
 
