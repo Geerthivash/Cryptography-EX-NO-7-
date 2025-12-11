@@ -18,44 +18,27 @@ To use the Data Encryption Standard (DES) algorithm for a practical application,
 ```
 #include <stdio.h>
 #include <string.h>
-unsigned char feistel(unsigned char half, unsigned char key) {
-return half ^ key; // Just XOR for demonstration
-}
-void simple_DES_encrypt(char *plaintext, unsigned char key) {
-unsigned char left = plaintext[0];
-unsigned char right = plaintext[1];
-printf("Initial L=%c, R=%c\n", left, right);
-for (int round = 1; round <= 4; round++) {
-unsigned char temp = right;
-right = left ^ feistel(right, key + round); // F-function
-left = temp;
-printf("Round %d -> L=%c, R=%c\n", round, left, right);
-}
-plaintext[0] = left;
-plaintext[1] = right;
-}
-void simple_DES_decrypt(char *ciphertext, unsigned char key) {
-unsigned char left = ciphertext[0];
-unsigned char right = ciphertext[1];
-printf("Initial L=%c, R=%c\n", left, right
-for (int round = 4; round >= 1; round--) {
-unsigned char temp = left;
-left = right ^ feistel(left, key + round);
-right = temp;
-printf("Round %d -> L=%c, R=%c\n", round, left, right);
-}
-ciphertext[0] = left;
-ciphertext[1] = right;
-}
-int main() {
-char text[3] = "HI"; // 2 chars = 16 bits (like one DES block simplified)
-unsigned char key = 0x0F;
-printf("Plaintext: %s\n", text);
-simple_DES_encrypt(text, key);
-printf("Ciphertext: %c%c\n", text[0], text[1]);
-simple_DES_decrypt(text, key);
-printf("Decrypted: %c%c\n", text[0], text[1]);
-return 0;
+
+void main(){
+    char P[] = "HI";  // 2-byte Plaintext Block
+    int K = 0xAA;     // Initial Key
+    int K1 = K ^ 0x01; // Subkey 1
+    int K2 = K ^ 0x02; // Subkey 2
+    char E[3], D[3];
+
+    // Encryption (Simulated 2 Rounds)
+    E[0] = P[0] ^ K1;
+    E[1] = P[1] ^ K2;
+    E[2] = '\0'; // Null terminator
+
+    // Decryption (Simulated 2 Rounds)
+    D[0] = E[0] ^ K1;
+    D[1] = E[1] ^ K2;
+    D[2] = '\0';
+
+    printf("Plain:     %s\n", P);
+    printf("Encrypted: %d %d\n", E[0], E[1]);
+    printf("Decrypted: %s\n", D);
 }
 ```
 
